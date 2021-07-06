@@ -33,8 +33,12 @@ export class UsersService {
   ): Promise<User[]> {
     // console.log(page);
     page = (page - 1) * amount;
-    keyword = '%' + keyword + '%';
-    console.log(keyword);
+    if (keyword) {
+      keyword = '%' + keyword + '%';
+    } else {
+      keyword = '%';
+    }
+    // console.log(keyword);
     return this.usersRepository.find({
       where: {
         username: Like(keyword),
@@ -46,7 +50,11 @@ export class UsersService {
   }
 
   async countAllUsers(keyword: string): Promise<any> {
-    keyword = '%' + keyword + '%';
+    if (keyword) {
+      keyword = '%' + keyword + '%';
+    } else {
+      keyword = '%';
+    }
     return await this.usersRepository.count({
       where: {
         username: Like(keyword),
@@ -55,56 +63,37 @@ export class UsersService {
     });
   }
 
-  async countGenderNumber(): Promise<any> {
-    const male = await this.usersRepository.count({
-      where: {
-        gender: 0,
-        is_deleted: false,
-      },
-    });
-    const female = await this.usersRepository.count({
-      where: {
-        gender: 1,
-        is_deleted: false,
-      },
-    });
-    const other = await this.usersRepository.count({
-      where: {
-        gender: 2,
-        is_deleted: false,
-      },
-    });
-    return {
-      male,
-      female,
-      other,
-    };
-  }
+  // async countGenderNumber(): Promise<any> {
+  //   const male = await this.usersRepository.count({
+  //     where: {
+  //       gender: 0,
+  //       is_deleted: false,
+  //     },
+  //   });
+  //   const female = await this.usersRepository.count({
+  //     where: {
+  //       gender: 1,
+  //       is_deleted: false,
+  //     },
+  //   });
+  //   const other = await this.usersRepository.count({
+  //     where: {
+  //       gender: 2,
+  //       is_deleted: false,
+  //     },
+  //   });
+  //   return {
+  //     male,
+  //     female,
+  //     other,
+  //   };
+  // }
 
   findOne(email: string): Promise<User> {
     return this.usersRepository.findOne({ where: { email } });
   }
   async findOneByUid(u_id: number): Promise<any> {
-    const user = await this.usersRepository.findOne({ where: { u_id } });
-    if (user) {
-      return {
-        u_id: user.u_id,
-        avatar: user.avatar,
-        profileBio: user.profileBio,
-        profileLink: user.profileLink,
-        posts: user.posts,
-        following: user.following,
-        followers: user.followers,
-        targetedBodyPartTags: user.targetedBodyPartTags,
-        locationTags: user.locationTags,
-        exerciseTypeTags: user.exerciseTypeTags,
-        equipmentTags: user.equipmentTags,
-        gender: user.gender,
-        username: user.username,
-      };
-    } else {
-      return null;
-    }
+    return await this.usersRepository.findOne({ where: { u_id } });
   }
   findOneByUsername(username: string): Promise<User[]> {
     return this.usersRepository.find({ where: { username } });

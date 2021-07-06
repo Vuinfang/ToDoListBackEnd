@@ -139,6 +139,23 @@ export class TaskController {
     return this.taskService.getTodayTaskByUid(parseInt(u_id));
   }
   /***
+   * Return all today's tasks
+   * @param task
+   */
+  @UseGuards(AuthGuard('jwt'))
+  @Get('getTodayTask')
+  @ApiQuery({
+    name: 'task',
+    description: 'task',
+  })
+  @ApiResponse({
+    status: 200,
+    description: "return all today's tasks",
+  })
+  async getTodayTask(@Query() task: Task): Promise<Task[]> {
+    return this.taskService.getTodayTask(task);
+  }
+  /***
    * Return all today's tasks belong to this user by specific condition
    * @param u_id
    * @param task

@@ -34,6 +34,13 @@ export class TaskService {
       .where('to_days(date) = to_days(now()) and task.u_id = :u_id', { u_id })
       .getMany();
   }
+  async getTodayTask(task: Task): Promise<Task[]> {
+    return await this.taskRepository
+      .createQueryBuilder('task')
+      .where('to_days(date) = to_days(now())')
+      .andWhere(task)
+      .getMany();
+  }
   async getTasks(task: Task): Promise<Task[]> {
     return await this.taskRepository.find(task);
   }
